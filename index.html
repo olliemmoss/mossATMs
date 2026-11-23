@@ -250,7 +250,7 @@
                 "guess" means to transition to some states from a $\wedge$ state.  See that this machine uses a technique
                 similar to the proof of Savitch's theorem, but uses alternation to make it much more time-efficient.
                 We start by establishing a start and finish configuration using existential states.  Then we middle-first-search
-                through all configurations, using universal states to try all middle configurations and existential states
+                through all configurations, using existential states to try all middle configurations and universal states
                 to avoid branching (the $b$ variable essentiality just lets us do a binary $\wedge$ without branching).
                 <br><br>
                 This is within time bounds: since $N_K$ runs in $s(n)$ space, it runs in $2^{O(s(n))}$ time (this is the maximum
