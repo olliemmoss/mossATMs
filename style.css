@@ -18,7 +18,7 @@ header {
     background-color: #2c3e50;
     color: #ffffff;
     text-align: center;
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem;
 }
 
 header h1 {
@@ -75,7 +75,7 @@ code {
 footer {
     text-align: center;
     padding: 2rem 1rem;
-    color: #7f8c8d;
+    color: #2c3e50;
     font-size: 0.9rem;
 }
 
@@ -124,3 +124,278 @@ footer {
     border-radius: 6px;
     display: block;
 }
+
+.pseudocode {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(225, 244, 255, 0.78) 100%
+  );
+  border: 1px solid rgba(130, 200, 245, 0.85);
+  border-radius: 10px;
+  box-shadow:
+    0 4px 14px rgba(0, 65, 120, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  padding: 8px 12px;
+  overflow-x: auto;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #0f2942;
+  margin: 12px
+}
+
+body {
+  background: 
+    radial-gradient(circle at 20% 20%, #a8edea 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, #96e6a1 0%, transparent 50%),
+    linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+  background-attachment: fixed;
+}
+
+.aero-button {
+  display: inline-block;
+  padding: 10px 24px;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  border: 1px solid #005fa3;
+  /* Two-stop hard gradient creates the classic mid-2000s "gel" shine */
+  background: linear-gradient(
+    180deg,
+    #7ad7ff 0%,
+    #29a6f6 49%,
+    #0077cc 51%,
+    #0099ff 100%
+  );
+  box-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  transition: filter 0.15s ease;
+}
+
+.aero-button:hover {
+  filter: brightness(1.1);
+}
+
+.aero-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  box-shadow: 
+    0 8px 24px rgba(0, 50, 90, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.aero-bubbles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none; /* Empty space remains clickable */
+  z-index: 0;
+}
+
+/* Handles the upward floating motion */
+.bubble-track {
+  position: absolute;
+  bottom: -80px;
+  left: var(--left);
+  width: var(--size);
+  height: var(--size);
+  animation: floatUp var(--dur) linear infinite;
+  animation-delay: var(--delay);
+}
+
+/* Handles the glossy look and the hover pop */
+.bubble {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  pointer-events: auto; /* Allows hovering over the bubble itself */
+  cursor: pointer;
+
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.35) 25%,
+    rgba(160, 230, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0.65) 100%
+  );
+  box-shadow:
+    inset 0 0 8px rgba(255, 255, 255, 0.85),
+    0 4px 12px rgba(0, 100, 160, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: transform 0.15s ease;
+}
+
+.bubble:hover {
+  transform: scale(1.12);
+}
+
+/* Triggered on hover by JS */
+.bubble.popped {
+  animation: popBurst 0.28s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes popBurst {
+  0% {
+    transform: scale(1.12);
+    opacity: 0.9;
+  }
+  60% {
+    transform: scale(1.65);
+    opacity: 0.5;
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.95);
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-55vh) translateX(14px);
+  }
+  90% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-115vh) translateX(-10px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .aero-bubbles {
+    display: none;
+  }
+}
+
+.aero-header {
+  position: sticky;
+  top: 0;
+  z-index: 100; /* Stays above both floating bubbles and cards */
+  
+  /* Two-tone glossy glass gradient */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(210, 240, 255, 0.48) 49%,
+    rgba(130, 205, 250, 0.42) 51%,
+    rgba(190, 235, 255, 0.62) 100%
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  /* Crisp double-edge glass rim */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 4px 18px rgba(0, 55, 100, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.aero-header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Vista-style glowing title + mini glossy orb */
+.aero-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #003366;
+  text-decoration: none;
+  /* Signature Windows Vista white outer glow for readability over glass */
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.95),
+    0 0 4px rgba(255, 255, 255, 0.9);
+}
+
+.aero-orb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ffffff 0%,
+    #7ce8ff 30%,
+    #0088ee 75%,
+    #004488 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(0, 80, 150, 0.35);
+}
+
+/* Navigation links */
+.aero-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.aero-nav-link {
+  padding: 0px 16px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #003b6f;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+/* Hover & Active state: turns into a glowing glass pill */
+.aero-nav-link:hover,
+.aero-nav-link.active {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  border-color: rgba(0, 110, 190, 0.8);
+  background: linear-gradient(
+    180deg,
+    #8ce0ff 0%,
+    #2ca8f8 49%,
+    #0077cc 51%,
+    #19a3ff 100%
+  );
+  box-shadow:
+    0 2px 6px rgba(0, 70, 130, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+html {
+  scroll-behavior: smooth; /* Smooth glide instead of an instant jump */
+}
+
+[id] {
+  scroll-margin-top: 80px;
+}
+

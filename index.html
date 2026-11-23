@@ -1,60 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMOSS UCT PROJ</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>OMOSS UCT PROJ</title>
+        <link rel="stylesheet" href="style.css">
 
-    <header>
-        <h1>🌈 Let's learn about Quantum Computational Complexity! 🌈</h1>
-        <p>an overview by Ollie M. A. Moss</p>
-    </header>
+        <script>
+            window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                macros: {
+                    NP: '{\\text{NP}}',
+                    P: '{\\text{P}}',
+                    coNP: '{\\text{coNP}}',
+                    PH: '{\\text{PH}}',
+                    TIME: '{\\text{TIME}}',
+                    SPACE: '{\\text{SPACE}}',
+                    NSPACE: '{\\text{NSPACE}}',
+                    ATIME: '{\\text{ATIME}}',
+                    ASPACE: '{\\text{ASPACE}}',
+                    AP: '{\\text{AP}}',
+                    PSPACE: '{\\text{PSPACE}}',
+                    APSPACE: '{\\text{APSPACE}}',
+                    BPP: '{\\text{BPP}}',
+                    AL: '{\\text{AL}}',
+                    EXP: '{\\text{EXP}}',
+                    AEXP: '{\\text{AEXP}}',
+                    EXPSPACE: '{\\text{EXPSPACE}}',
+                    NPSPACE: '{\\text{NPSPACE}}',
+                    NC: '{\\text{NC}}',
+                    Ppoly: '{\\text{P/poly}}',
+                    TQBF: '{\\text{TQBF}}'
+                    }
+                }
+            };
+        </script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </head>
+    <body>
+        
+    <header class="aero-header">
+  <div class="aero-header-inner">
+    <a href="index.html" class="aero-logo">
+      <span class="aero-orb"></span>
+      <span>Let's learn about Alternating TMs!</span>
+    </a>
 
-    <main>
-        <section class="content-box">
-            <h2>Outline</h2>
-            <ul>
-                <li>Explaining the new model (what is a "quantum TM"?)</li>
-                <li>discussion on quantum computing's implications for the Church-Turing Thesis</li>
-                <li>Important complexity classes & their relationship to other known classes</li>
-                <li>Complete languages for these classes (& what is a reasonable reduction to use?)</li>
-                <li>Citations / Sources</li>
+    <nav class="aero-nav">
+      <a href="#overview" class="aero-nav-link active">Overview</a>
+      <a href="#complexity" class="aero-nav-link">Complexity</a>
+      <a href="#proofs" class="aero-nav-link">Proofs</a>
+      <a href="#conclusion" class="aero-nav-link">Conclusion</a>
+    </nav>
+  </div>
+</header>
 
-            </ul>
-            I'll have proofs throughout.
+
+    <main id="top">
+<div class="aero-bubbles" aria-hidden="true">
+  <!-- Left side bubbles -->
+  <div class="bubble-track" style="--left: 3%;  --size: 38px; --dur: 14s; --delay: 0s;"><span class="bubble"></span></div>
+  <div class="bubble-track" style="--left: 8%;  --size: 22px; --dur: 11s; --delay: 3s;"><span class="bubble"></span></div>
+  <div class="bubble-track" style="--left: 5%;  --size: 52px; --dur: 18s; --delay: 6s;"><span class="bubble"></span></div>
+  <div class="bubble-track" style="--left: 11%; --size: 28px; --dur: 13s; --delay: 8s;"><span class="bubble"></span></div>
+
+  <!-- Right side bubbles -->
+  <div class="bubble-track" style="--left: 88%; --size: 32px; --dur: 12s; --delay: 1s;"><span class="bubble"></span></div>
+  <div class="bubble-track" style="--left: 93%; --size: 48px; --dur: 17s; --delay: 4s;"><span class="bubble"></span></div>
+  <div class="bubble-track" style="--left: 85%; --size: 20px; --dur: 10s; --delay: 7s;"><span class="bubble"></span></div>
+  <div class="bubble-track" style="--left: 91%; --size: 42px; --dur: 15s; --delay: 9s;"><span class="bubble"></span></div>
+</div>
+
+<section class="aero-card" id="overview">
+            <h2>Overview</h2>
+            This page will discuss Alternating Turing Machines, a new model of computation that builds off of the ideas
+            of nondeterministic turing machines to solve multiply quantified problems.  We will start off by motivating the idea,
+            and then rigorously defining ATMs to fit our motivation.  We'll discuss how space and time complexity are measured
+            for ATMs, explore the new complexity classes we're able to define, and then discover how these complexity classes
+            relate to the classes we're used to.  We will prove this part rigorously.  Finally, we will discuss how alternating
+            computation relates to parallel computation.
+            <br><br>
+            Designed by Ollie A. Moss 🌿
+
         </section>
-    </main>
 
-    <main>
-        <section class="content-box">
-            <h2>alternatively...</h2>
-            Check out <a href="https://en.wikipedia.org/wiki/Alternating_Turing_machine">ATM</a>s.
-            This seems like a sufficiently rich topic that I'd be interested in exploring.
-            In that case, I'd do:
+        <section class="aero-card">
+            <h2>Motivation</h2>
+            Recall the languages defined for the arithmetic hierarchy: $\Sigma_2^P$ is all languages that have a poly-time
+            verifier $V$ such that $x \in L \iff \exists y_1 \forall y_2 V(x, y_1, y_2) = 1$.  $\Pi_2^P$ is just co-$\Sigma_2^P$.
+            <br><br>
+            By adding more quantifiers, we can define $\Sigma_k^P$ and $\Pi_k^P$ for any $k \geq 1$.  
+            The union of all these classes is called the polynomial hierarchy ($\PH$).
+            <br><br>
+            A reasonable question to ask about these $\PH$ classes: do they have a TM representing them?
+            For example, $\NP$ is represented by NTMs and $\BPP$ is represented by PTMs.  Does there exist an analogue for these classes?
+            <br><br>
+            The answer is yes, and we represent it using Alternating Turing Machines (ATMs).  Let's derive their definition from this want:
+            specifically, we'd like to write a statement like: 
+            $$\Sigma_2^\P = \{L: \exists A, \text{$A$ is a 2-$\Sigma$ATM that that solves $L$ in poly-time}\}$$
+
+            To start off, let's not worry about bounding the number of quantifiers, to just get a feel for what an ATM is.
+            Such a machine would be a generalization of an NTM, where we can have both existential and universal states.  
+            In an existential state, the machine accepts if there exists a transition that leads to acceptance.  
+            In a universal state, the machine accepts if all transitions lead to acceptance.
+
+        </section>
+
+        <section class="aero-card">
+            <h2>Definition</h2>
+            An ATM is a 6-tuple $(Q, \Sigma, \Gamma, \delta, q_0, g)$ where:
             <ul>
-                <li>Explaining the new model (what is an ATM?)</li>
-                <li>Some reasonable problems to be solved by ATMs</li>
-                <li>Relationship btwn ATM classes and other classes (I need to read some proofs...)</li>
-                <li>Bounded ATMs (can only alternate so many times)</li>
-                <li>Citations / Sources</li>
+                <li>$Q$ is a finite set of states</li>
+                <li>$\Sigma$ is the input alphabet not containing the blank symbol $\sqcup$</li>
+                <li>$\Gamma$ is the tape alphabet, where $\Sigma \subseteq \Gamma$ and $\sqcup \in \Gamma$</li>
+                <li>$\delta: Q \times \Gamma \to \mathcal{P}(Q \times \Gamma \times \{L, R\})$ is the transition function</li>
+                <li>$q_0 \in Q$ is the start state</li>
+                <li>$g: Q \to \{\text{acc}, \text{rej}, \exists, \forall\}$ gives us the type of each state</li>
+            </ul>
 
+            We define configurations as expected, just keeping track of the state, tape contents, and head position.  
+            Additionally, we define each configurating as "accepting" or "rejecting":
+            <br>
+            <ul>
+                <li>If $g(q) = \text{acc}$, the configuration is accepting</li>
+                <li>If $g(q) = \text{rej}$, the configuration is rejecting</li>
+                <li>If $g(q) = \exists$, the configuration is accepting iff we can reach an accepting configuration after one step
+                    of the transition function (picking any of its outputs)
+                </li>
+                <li>If $g(q) = \forall$, the configuration is accepting iff all configurations reachable in one step 
+                    are accepting</li>
+            </ul>
+            See that we can visualize this as a tree<sup><a href="#fn1" id="ref1">1</a></sup>, where each node is a configuration, and the children of a node are 
+            all the configurations reachable in one step.  We say that an ATM accepts an input if the root of this 
+            tree (the ATM where the tape is just $x$, the state is $q_0$, and the tape head is at the beginning) is 
+            an accepting configuration.
+            <br>
+            <br>
+            To model this as a process, as we normally think about TMs, we can think of the ATM as "switching" between existential and universal states.  
+            In an existential state, the machine can "guess" a transition to take, and in a universal state, 
+            the machine must "try" all transitions.  This is a generalization of NTMs, where we only have existential states.
+            <br>
+            <br>
+            Since our goal is to model existence and universality, and we've been talking about $\NP$ as $\exists \P$, we
+            should be able to simulate NTMs with ATMs.  This is easy to do - just take an NTM and define it to be an ATM where
+            the accepting/rejecting states are acc/rej, and all other states are $\vee$.  Completely eliminate intermediate
+            "coin-flip" states - just have the ATM transition to the two states that coin-flip states would have transitioned to.
+            This is a valid ATM, and it accepts the same language as the NTM.
+            <br><br>
+            A cool result of this is that we can immediately define "co-NTM"s, which solve $\coNP$ problems, as ATMs where
+            every intermediate state is $\wedge$.
+        </section>
+
+        <section class="aero-card" id="complexity">
+            <h2 >Complexity</h2>
+            Before we talk about complexity classes derived from ATMs, let's talk about the complexity of ATMs themselves.  
+            Note this is weird - we've defined ATMs more as trees than as machines, so we should respect this in our complexity 
+            definitions.  We define the complexity with the ATM with respect to the set of configurations that are necessary
+            to inspect to determine if the ATM accepts or rejects.
+            <br><br>
+            The time complexity (given a certain input) is the maximum, over all configurations necessary to inspect, of the number of steps
+            to get from the starting configuration to that configuration.  Observe that this is upper bounded by, but not always 
+            equal to, the depth of the tree.  In particular, $\vee$ states with an acc child or $\wedge$ states with a rej
+            child can consider themselves foregone conclusions - even if the tree extends further down, we don't need to inspect 
+            those configurations to determine the result of the ATM.  Finally, the time complexity of the machine is 
+            $$T_A : \mathbb{N} \to \mathbb{N}= \max_{|x|=n} \{\text{time complexity of $A(x)$}\}$$
+            Similarly, we define space complexity as the maximum, over all all configurations necessary to inspect, of the 
+            number of unique tape cells visited.  As before, this is the maximum over all inputs of length $n$.
+            With this framework, it's reasonable to talk about "poly-time" and "poly-space" ATMs.
+            <br><br>
+            It turns out that for any ATM with these extra configurations that don't contribute
+            towards the time/space complexity, we could have altered the ATM to never enter these configurations.
+            This change doesn't change the ATM's language or change its complexity by more than a constant factor.  
+            Thus, from here onwards, we will assume that time complexity is just the depth of the tree 
+            and space complexity is a max over all reachable configurations.
+        </section>
+
+        <section class="aero-card">
+            <h2>Bounded ATMs</h2>
+            We can also define bounded ATMs, which are ATMs that can only alternate a certain number of times.  Formally, we say
+            that an ATM is $k$-bounded (or it's a $k$-ATM) if its states can be partitioned into $k$ sets which alternate
+            between being only $\wedge$ states and only $\vee$ states, and if $i < j$, there are no transitions from
+            a state in set j to a state in set i.  This enforces that in any computation path, the machine can only
+            alter between existential and universal states at most $k$ times.
+            <br ><br>
+            Further, we say that an ATM is $\Sigma_k$ if its start state is existential, 
+            and $\Pi_k$ if its start state is universal.  NTMs are just $\Sigma_1$ ATMs.  Now we have what we wanted before
+            - a definition of $\Sigma_k^P$ and $\Pi_k^P$ in terms of solely ATMs.  $\Sigma_k^\P$ is all languages that can
+            be solved by a poly-time $\Sigma_k$ ATM.
+              $\PH$ is the union of all these classes, 
+            and we can define it as the class of languages that can be solved by ATMs with a bounded number of alternations.
+        </section>
+
+        <section class="aero-card">
+            <h2>Complexity Classes</h2>
+            Now we can automatically fire off the definitions of a bunch of complexity classes.
+            <ul>
+                <li>$\ATIME(t(n))$ is all languages that can be solved by an ATM in $O(t(n))$ time.</li>
+                <li>$\ASPACE(s(n))$ is all languages that can be solved by an ATM in $O(s(n))$ space.</li>
+                <li>$\text{A}_k\TIME(t(n))$ is all languages that can be solved by a $k$-ATM in $O(t(n))$ time.</li>
+                <li>$\text{A}_k\SPACE(s(n))$ is all languages that can be solved by a $k$-ATM in $O(s(n))$ space.</li>
+                <li>$\Sigma_k\TIME(t(n))$ is all languages that can be solved by a $\Sigma_k$ ATM in $O(t(n))$ time.</li>
+                <li>$\Pi_k\TIME(t(n))$ is all languages that can be solved by a $\Pi_k$ ATM in $O(t(n))$ time.</li>
+                <li>$\Sigma_k\SPACE(s(n))$ is all languages that can be solved by a $\Sigma_k$ ATM in $O(s(n))$ space.</li>
+                <li>$\Pi_k\SPACE(s(n))$ is all languages that can be solved by a $\Pi_k$ ATM in $O(s(n))$ space.</li>
+                <li>$\AP = \bigcup_{k > 0} \ATIME(n^k)$</li>
+                <li>$\APSPACE = \bigcup_{k > 0} \ASPACE(n^k)$</li>
+            </ul>
+            ...and we can just keep going.  However, I claim that we may want to stop here, because we're not actually
+            naming new complexity classes.  In particular, for $f(n) \geq \log_2 n$:
+            <ul>
+                <li>$\ASPACE(f(n)) = \TIME(2^{O(f(n))})$</li>
+                <li>$\ATIME(f(n)) \subseteq \SPACE(f(n))$</li>
+                <li>$\NSPACE(f(n)) \subseteq \ATIME(f(n)^2)$</li>
+            </ul>
+            With respect to the classes we really care about, this gives us:
+            <ul>
+                <li>$\AL = \P$ using (1)</li>
+                <li>$\AP = \PSPACE$ using (2) and (3), as well as $\NPSPACE = \PSPACE$</li>
+                <li>$\APSPACE = \EXP$ using (1)</li>
+                <li>$\AEXP = \EXPSPACE$ using (2) and (3)</li>
             </ul>
         </section>
+
+        <section class="aero-card" id="proofs">
+            <h2>The Proof</h2>
+            <b>Theorem 1:</b> $s(n) \ge \log_2 n \implies \NSPACE(s(n)) \subseteq \ATIME(s(n)^2)$.  Let $K \in \NSPACE$, decided by
+            a poly-space NTM $N_K$.  Then we define the following ATM to solve $K$, relying the fact that $N_K(x)$ accepts iff
+            there is some sequence of configurations that yield each other, ending in an accepting configuration:
+            <div class="pseudocode">def $A_K$($x$):
+    let $C_0$ be the starting configuration of $N_K(x)$
+    guess $C_f$ to be some configuration
+    if $C_f$ isn't in the accepting state, reject.
+    def $\varphi(C_i,C_j,k)$:
+        if $k = 0$:
+            return $(C_i = C_j) \vee \varphi_{\text{yield}}(C_i, C_j)$
+        else:
+            guess some intermediate configuration $C_\ell$
+            try $b \in \{0,1\}$
+            if $b=0$:
+                return $\varphi(C_i, C_\ell, k-1)$
+            if $b=1$:
+                return $\varphi(C_\ell, C_j,k-1)$
+    return $\varphi(C_0, C_f, \log_2(T_{N_k}(n)))$</div>
+                Recall that here "try" means to transition to some number of states from a $\vee$ state and 
+                "guess" means to transition to some states from a $\wedge$ state.  See that this machine uses a technique
+                similar to the proof of Savitch's theorem, but uses alternation to make it much more time-efficient.
+                We start by establishing a start and finish configuration using existential states.  Then we middle-first-search
+                through all configurations, using universal states to try all middle configurations and existential states
+                to avoid branching (the $b$ variable essentiality just lets us do a binary $\wedge$ without branching).
+                <br><br>
+                This is within time bounds: since $N_K$ runs in $s(n)$ space, it runs in $2^{O(s(n))}$ time (this is the maximum
+                graph distance between the start and end configuration).  Thus the amount of times we run $\varphi$, $\log_2 T_{N_K}$,
+                is $O(s(n))$.  Additionally, each run takes $O(s(n))$ time since this is the length of a configuration, and 
+                so we have to guess $s(n)$ bits and write them onto the tape.  Thus $K \in \ATIME(s(n)^2)$.
+                <br><br>
+                <b>Theorem 2:</b> $t(n) \ge \log_2 n \implies \ATIME(t(n)) \subseteq \SPACE(t(n))$.  Let $K \in \ATIME(t(n))$, and
+                let $A_K$ be the ATM solving it in $t(n)$ time.  To simulate it with a deterministic machine, for any input $x$, we simply
+                depth-first-search the configuration tree.  In particular, simulate the machine, but each time we reach a branching node,
+                remember if it's $\wedge$ or $\vee$ and remember how many of its children we've searched (assuming that all configurations
+                have an order and we search in that order, which is reasonable because they're encodable).  Each time we reach a final
+                acc or rej configuration, travel back up to the last node we wrote down.  Update its current value ($\vee$ start at False,
+                $\wedge$ start at True) and determine if we have enough data to move on or if we need to inspect another one of its children.
+                <br><br>
+                Observe that this process only needs to store a constant amount of info per configuration on the path we're currently
+                exploring, as well as the configuration itself.  It doesn't need to store all configurations visited because we can just travel down from 
+                the root node each time, as we've encoded where we branch at each step.  The maximum amount of nodes along this path
+                is $t(n)$, so this deterministic machine runs in space $t(n)$.  Thus $K \in \SPACE(t(n))$.
+                <br><br>
+                <b>Theorem 3:</b> $s(n) \ge \log_2 n \implies \ASPACE(s(n)) \subseteq \TIME(2^{O(s(n))})$.  Let $K \in \ASPACE(s(n))$,
+                and let $A_K$ be the ATM solving it in $s(n)$ space.  Now we simulate $A_K$ with a deterministic machine $M_K$.
+                $M_K$ simply writes down every possible configuration with tape size $\le s(n)$.  Note that there are $2^{O(s(n))}$ of these,
+                each with size $O(s(n))$.  It then loops over all of these, labeling each with either a 0, 1, or ?.  Known accepting configurations
+                get a 1, known rejecting configurations get a 0.  As always, we can decide a configuration once all of its children
+                have been decided.  End once we've decided if the starting configuration is accepting or rejecting.
+                See that at least one configuration gets decided on each loop (otherwise we'd have some weird cylical dependency)
+                so this takes up to $2^{O(s(n))}$ loops.  Thus, in total, we take $(2^{O(s(n))})^2 = 2^{O(s(n))}$ time.
+                <br><br>
+                <b>Theorem 4: </b> $t(n) \ge \log_2 n \implies \TIME(t(n)) \subseteq \ASPACE(\log (t(n)))$.  Let $K \in \TIME(t(n))$, and
+                let $M_K$ be the TM solving it in $t(n)$ time.  We want to work at the level of tape cells and time steps.
+                Represent tape cells as members of $H = (\Gamma \times Q) \cup \Gamma$, where the tape cell under the head
+                is named $(c, q) \in \Gamma \times Q$, embedding the current state, while all other cells are just from $\Gamma$.
+                  Observe that at any point in time, for any tape cell $i$ of $M_K$, if we know
+                the values in tape cells $i-1, i, i+1$, then we can determine the 
+                value of tape cell $i$ after one TM step.  
+                  Let the function computing this
+                be $\delta : H^3 \to H$.  We can construct a recursive helper function, <code>verify</code>,
+                which takes in a time $t$, index $i$, and tape cell $\sigma$, and verifies if it's possible for $M_K$
+                 to have tape cell $i$ have value $\sigma$ at time $t$.  Let $x_i$ represent the $i$th character of input $x$,
+                 and if this is off of the word then just default it to $\sqcup$.
+                <div class="pseudocode">def $A_K$($x$):
+    def verify($t, i, \sigma$):
+        if $t = 1$:
+            if $i=1$:
+                if $\sigma \ne (x_1, q_0)$:
+                    reject
+            else:
+                if $\sigma \ne x_i$:
+                    reject
+            accept
+        else:
+            guess $\sigma_{i-1}, \sigma_i, \sigma_{i+1} \in H$
+            if $\delta(\sigma_{i-1}, \sigma_i, \sigma_{i+1}) \ne \sigma$:
+                reject
+            else:
+                try $b \in \{-1,0,1\}$
+                return verify($t+b, i+b, \sigma_{i+b}$) 
+    guess $T \in \{1, 2,\cdots, t(n)\}$
+    guess $I \in \{-t(n), \cdots, t(n)\}$
+    guess $C \in \Gamma$
+    return verify($T, I, (C, q_{\text{accept}})$)</div>
+
+    <code>verify</code> either checks that we have a correct base case, or uses $\vee$ branching to find a feasible set of
+    above cells and then verifies that all three above cells work.  $A_K$ then guesses the position we're in when we finally accept
+    (we know that it's bounded by $t(n)$) and runs <code>verify</code>.  
+    <br><br>
+    This runs in $O(\log(t(n)))$ space since, at any point
+    in time, we need only to store $T,I,C,t,i,\sigma$.  See that $T,I,t,i$ are all within a range of at most $2t(n)$ size and
+    $C,\sigma$ are in a range of fixed size.  Thus, to represent all of these values, we only need $O(\log(t(n)))$ bits.
+    Since we can reuse space for each run of <code>verify</code>, this is indeed all of the necessary storage space.
+    Thus $K \in \ASPACE(\log(t(n)))$.
+    
+        </section>
+
+        <section class="aero-card">
+            <h2>A Second Proof of $\AP = \PSPACE$</h2>
+            This one is much more simple - all we need to do is show that $\TQBF$ is $\AP$-complete.  
+            See that this is a reasonable task, as ATMs are almost built to exactly solve $\TQBF$.
+            First we show that $\TQBF \in \AP$ with the following pseudocode:  
+            <div class="pseudocode">def $\TQBF$($Q_1x_1Q_2x_2\cdots Q_nx_n \varphi(x_1,x_2,\cdots,x_n)$):
+    verify that the input $x$ has the intended form
+    for $i=1, 2, \cdots, n$:
+        if $Q_i = \exists$:
+            guess $x_i \in \{0,1\}$
+        if $Q_i = \forall$:
+            try $x_i \in \{0,1\}$
+    return $\varphi(x_1, \cdots, x_n)$</div>
+    
+    where "guess" encodes a transition from a $\vee$ state to two states (one that writes 0 and one that writes 1)
+    and "try" encodes the same thing, but from a $\wedge$ state.  This is correct because our assignment of the $x_n$s perfectly
+    matches the quantifiers, so the assignments that make $\varphi$ return true propagate up the tree of quantifiers as expected.
+    We can formalize this argument with induction.  This algorithm is also polytime,
+    since we can always solve $\varphi$ in time proportional to its length.
+    <br><br>
+    To show that it's $\AP$-hard, let $K \in \AP$.  Then there is some poly-time ATM $A_K$ s.t. for any $x$, $A_K(x) = 1$ iff 
+    the configuration tree of $A_K(x)$ ends up with an accepting starting state.  Observe that we can't just map this to
+    a TQBF on the configurations because we have no idea which way the quantifiers go (they need not alternate between types).
+    However, this is a fixable problem, and we call this fix "normalizing" the ATM.  A normalized ATM has many nice properties
+    that let it map directly to $\TQBF$:
+    <ul>
+        <li>For any input, configurations strictly alternate between $\exists$ and $\forall$, starting at $\exists$</li>
+        <li>For any input, all paths to leaves have the exact same length</li>
+        <li>For any input, we have a branching factor of at most 2</li>
+        <li>It solves the exact same language as the non-normalized version</li>
+        <li>Its runtime is off from the the non-normalized version by at most a polynomial factor</li>
+    </ul>
+    We can ensure all of these properties by just adding dummy states to the ATM.  Observe that any time we transition
+    without branching, it doesn't matter if the state we transitioned from was $\exists$ or $\forall$.  Thus, any
+    time we transition between states of the same kind, we just add a dummy state between.  This at most doubles the runtime.
+    To ensure property (2), we can convert all halting states into two-cycles (so we can alternate $\vee$, $\wedge$)
+    and add a clock tape that counts to $T_{A_K}(n)$ before
+    letting us halt.  This ensures that all branches end at the same time.  Finally, we can convert all multi-state transititions
+    into two-state transitions by using the same technique from the end of midterm 2 (replacing vertices with binary trees)
+    on the state diagram.  This increases runtime by a factor of at most $\log k$, where $k$ is the number of states.
+    <br><br>
+    Now we can assume $A_K$ is normalized and has runtime $p(n)$.  The reduction is now a one-liner:
+    define 
+    $$f(x) = \exists C_1 \forall C_2 \cdots \exists C_{p(n)-1} \forall C_{p(n)} \ \left(g(C_{p(n)}) =  \text{acc} \wedge \bigwedge_{i=1}^{p(n)} \varphi_{\text{yield}}(C_{i-1}, C_i)\right)$$
+    By the definition of ATM acceptance, $A_K$ accepts iff there is this quantified sequence starting from the starting configuration
+    and ending with a (simple) accepting configuration.  Since all of these paths must have length $p(n)$, this is
+    a correct Karp reduction.  Thus $K \leq_m^\P \TQBF$, so it's $\AP$-hard.  Since it's $\AP$-hard and in $\AP$, it's $\AP$-complete.
+    Finally, since there is a language that is both $\AP$ and $\PSPACE$ complete, $\AP=\PSPACE$.
+
+        </section>
+
+        <section class="aero-card" id="conclusion">
+            <h2>What did we learn?</h2>
+            First of all, since we were able to draw equivalences/containments between ATM classes and more familiar classes,
+            we're able to draw conclusions about those other classes using ATM-based proofs.  For example, to argue that a
+            language can be solved in poly-space, it suffices to show that it can be solved, with alternation, in poly-time.
+            For some languages, this could be easier.
+            <br><br>
+            More importantly, ATMs give us a lot of insight into parallel computation, much like circuits.  The efficient TM-to-circuit compiler
+            tells us that all normal computation can be carried out with sequences of ANDs and ORs, and existential/universal
+            branching in ATMs gives us exactly this power.  Thus we can think of ATMs a model of parallel computation.
+            This relationship with circuits is more than semantic: it turns out that we can redefine logspace-uniform $\NC$ to be
+            the set of all languages that can be solved with an ATM of space $O(\log n)$, time $O(\log^k n)$ (for some $k \in \mathbb{N}$).
+            The equivalence doesn't hold for general circuit size/depth constraints without a slightly stronger notion of uniformity,
+            but that's not actually the point - the point is that we can use ATMs as their own model of parallel computation.
+            <br><br>
+            Furthermore, this result helps support the <b>Parallel Computation Hypothesis</b>.  The Parallel Computation Hypothesis
+            asserts that if a parallel (not rigorously defined) machine can solve a language $K$ in $t(n)$ time, then a sequential
+            machine can solve that same language in $t(n)^k$ space for some constant $k$.  In other words, parallel time and 
+            sequential space differ by only a polynomial factor.  If we choose our model of parallel computation to be ATMs, see
+            that this relation is true, since $\ATIME(t(n)) \subseteq \SPACE(t(n)) \subseteq \ATIME(t(n)^2)$.  Since the Parallel
+            Computation Hypothesis is not a mathematical statement, this doesn't "prove" it, but this does provide some solid evidence.
+        </section>
+
+        <section class="aero-card">
+            <h2>Works Cited</h2>
+            This website was created by Ollie A. Moss.
+            The majority of my research was derived from the <a href="https://en.wikipedia.org/wiki/Alternating_Turing_machine">Wikipedia article</a>
+            on ATMs.  It also led me to <a href="https://web.archive.org/web/20160412232110/http://users.cis.fiu.edu/~giri/teach/5420/f01/papers/p114-chandra.pdf">Alternation</a>,
+            the main research paper exploring this topic.  Google Gemini was used sparingly to explain some topics for my own understanding,
+            but all words presented here are my own.
+            <br><br>
+            The parallelism-related conclusions come from <a href="https://www.academia.edu/116596014/On_uniform_circuit_complexity">On uniform circuit complexity</a>, 
+            <a href="https://en.wikipedia.org/wiki/Parallel_computation_thesis">Parallel computation thesis</a>, and my own thoughts, 
+            with some summarization performed by Gemini. 
+            <br><br>
+            Google Gemini was used excessively for frontend website design.  I did not write a single line of the CSS file.
+            Art direction by Ollie Moss.
+        </section>
+
+
     </main>
     
-    <details class="reveal-box">
-    <summary>CLICK 4 JUMPSCARE!!! 👻</summary>
-    <div class="image-container">
-        <img src=veer.jpg>
-    </div>
-    </details>
+    <div style="text-align: center;">
+        <details class="aero-button">
+        <summary>CLICK 4 JUMPSCARE!!! 👻</summary>
+            <img src=veer.jpg>
+        </details>
+</div>
+
+<footer class="footnotes">
+    <ol>
+        <li id="fn1">
+            [1]: Note that the configuration graph doesn't have to be a tree, but any cycles would make it loop forever, 
+            so we there's no use in talking about the complexity of such ATMs. 
+            <a href="#ref1" title="Jump back up">&#8617;</a>
+        </li>
+    </ol>
+</footer>
 
     <footer>
         <p>&copy; 2026 OMo$$ Productions. Created with love.</p>
     </footer>
+
+    <script>
+  document.querySelectorAll('.bubble').forEach(bubble => {
+    bubble.addEventListener('mouseenter', () => {
+      if (bubble.classList.contains('popped')) return;
+      
+      const track = bubble.parentElement;
+      bubble.classList.add('popped');
+
+      // Wait for the 0.28s pop animation to finish, then reset offscreen
+      setTimeout(() => {
+        // 1. Temporarily disable the upward float animation
+        track.style.animation = 'none';
+        track.style.animationDelay = '0s';
+        
+        // 2. Force browser reflow so it registers the reset at bottom: -80px
+        void track.offsetWidth;
+        
+        // 3. Unhide the bubble while it is safely offscreen at the bottom
+        bubble.classList.remove('popped');
+        
+        // 4. Restart the upward float animation from the bottom
+        track.style.animation = '';
+      }, 350);
+    });
+  });
+</script>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.aero-nav-link');
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    },
+    {
+      // Triggers when a section enters the middle band of the viewport
+      rootMargin: '-25% 0px -60% 0px',
+      threshold: 0
+    }
+  );
+
+  sections.forEach(section => observer.observe(section));
+</script>
+
 
 </body>
 </html>
