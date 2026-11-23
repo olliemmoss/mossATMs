@@ -32,6 +32,8 @@
                     NPSPACE: '{\\text{NPSPACE}}',
                     NC: '{\\text{NC}}',
                     Ppoly: '{\\text{P/poly}}',
+                    L: '{\\text{L}}',
+                    EXPEXP: '{\\text{2EXP}}',
                     TQBF: '{\\text{TQBF}}'
                     }
                 }
@@ -321,6 +323,14 @@
     $C,\sigma$ are in a range of fixed size.  Thus, to represent all of these values, we only need $O(\log(t(n)))$ bits.
     Since we can reuse space for each run of <code>verify</code>, this is indeed all of the necessary storage space.
     Thus $K \in \ASPACE(\log(t(n)))$.
+    <br><br>
+    <b>Key Takeaway:</b> using all we've learned, we now know that $\ATIME(f(n)) \subseteq \SPACE(f(n)) \subseteq \ATIME(f(n)^2)$
+    and $\ASPACE(f(n)) = \TIME(2^{O(f(n))})$.  Take a look at our typical space-time hierarchy:
+
+    $$\L \subseteq \P \subseteq \PSPACE \subseteq \EXP \subseteq \EXPSPACE \subseteq \EXPEXP \subseteq \cdots$$
+
+    With the statements above, we now know that introducing alternation to the mix (using ATMs instead of normal TMs)
+    moves us exactly one step up this hierarchy.  Neat!
     
         </section>
 
